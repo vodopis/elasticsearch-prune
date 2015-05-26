@@ -1,4 +1,4 @@
-es-prune
+elasticsearch-prune
 ========
 
 Prunes large documents in Elasticsearch. Will iterate through all documents in logstash index dated now()-PRUNE_OLDER_THAN_MONTHS and empty 
