@@ -12,7 +12,7 @@ SCROLL_ID_LIFESPAN = '1m'
 SCROLL_SIZE = 1000
 PRUNE_OLDER_THAN_MONTHS = 3
 
-SCROLL_ID_CMD = """curl -s -XPOST "http://{es_host}:{es_port}/logstash-{prune_date_fmt}/ranking-api/_search?pretty=true&search_type=scan&scroll={scroll_id_lifespan}" -d'
+SCROLL_ID_CMD = """curl -s -XPOST "http://{es_host}:{es_port}/logstash-{prune_date_fmt}/{es_index_type}/_search?pretty=true&search_type=scan&scroll={scroll_id_lifespan}" -d'
 {{
     "size":  {scroll_size},
     "fields": ["_id"],
@@ -36,7 +36,7 @@ def es_prune(prune_date):
     prune_date_fmt = prune_date.strftime('%Y.%m.%d')
     bulk_json_prefix = '{ "update": { "_index": "logstash-' + prune_date_fmt + '", "_type": "' + ES_INDEX_TYPE + '", "_id": "'
 
-    siq = SCROLL_ID_CMD.format(es_host=ES_HOST, es_port=ES_PORT, prune_date_fmt=prune_date_fmt,scroll_id_lifespan=SCROLL_ID_LIFESPAN,scroll_size=SCROLL_SIZE)
+    siq = SCROLL_ID_CMD.format(es_host=ES_HOST, es_port=ES_PORT, prune_date_fmt=prune_date_fmt,scroll_id_lifespan=SCROLL_ID_LIFESPAN,scroll_size=SCROLL_SIZE, es_index_type=ES_INDEX_TYPE)
     try:
         siq_output = subprocess.check_output(siq, shell=True)
     except subprocess.CalledProcessError as e:
